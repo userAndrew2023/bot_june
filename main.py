@@ -25,11 +25,8 @@ def start(message):
     markup = types.InlineKeyboardMarkup()
     subscribe_button = types.InlineKeyboardButton(f"Участвовать ({count})", callback_data="check_sub")
     markup.add(subscribe_button)
-    bot.send_message(message.chat.id, """<b>😍 Музыка, а не розыгрыш!</b>
-Разыгрываем одни наушники Apple Airpods!
-Для участия необходимо подписаться на наш канал @vamdodomaru и нажать кнопку "Участвовать" под этим постом.
-
-Итоги подведем 11 июня в 14:00 случайным образом с помощью рандомайзера. Приз отправим в любой город России и СНГ, доставка за наш счет! 🔥""",
+    bot.send_message(message.chat.id, """<b>😍 Apple Airpods почти ваши!</b>
+Осталось нажать одну кнопочку 👇""",
                      reply_markup=markup, parse_mode="HTML")
 
 
@@ -42,11 +39,11 @@ def check_subscription(message):
 @bot.callback_query_handler(func=lambda call: call.data == 'check_sub')
 def check_sub(call: CallbackQuery):
     user_id = call.from_user.id
-    if (cursor.execute(f"SELECT * FROM subscribers WHERE user_id = '{user_id}'").fetchone()):
-        bot.send_message(call.from_user.id, "Вы уже учавствуете в конкурсе")
+    if cursor.execute(f"SELECT * FROM subscribers WHERE user_id = '{user_id}'").fetchone():
+        bot.send_message(call.from_user.id, "Вы уже участвуете в конкурсе")
     elif check_if_subscribed(user_id, "@vamdodomaru"):
         add_to_database(user_id, call.from_user.username)
-        bot.send_message(call.from_user.id, "Вы учавствуете в конкурсе 🔥")
+        bot.send_message(call.from_user.id, "Вы участвуете в конкурсе 🔥")
     else:
         bot.send_message(call.from_user.id, "Пожалуйста, подпишитесь на канал для участия.")
     bot.answer_callback_query(call.id)
