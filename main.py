@@ -19,15 +19,16 @@ bot = telebot.TeleBot('7206503391:AAGZgZU4jsEAcCLbxIWpvZUZlyqdUBeKD08')
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    cursor.execute("SELECT COUNT(*) FROM subscribers")
-    count = cursor.fetchone()[0]
-
-    markup = types.InlineKeyboardMarkup()
-    subscribe_button = types.InlineKeyboardButton(f"Участвовать ({count})", callback_data="check_sub")
-    markup.add(subscribe_button)
-    bot.send_message(message.chat.id, """<b>😍 Apple Airpods почти ваши!</b>
-Осталось нажать одну кнопочку 👇""",
-                     reply_markup=markup, parse_mode="HTML")
+    bot.send_message(message.chat.id, "Конкурс завершен!")
+#     cursor.execute("SELECT COUNT(*) FROM subscribers")
+#     count = cursor.fetchone()[0]
+#
+#     markup = types.InlineKeyboardMarkup()
+#     subscribe_button = types.InlineKeyboardButton(f"Участвовать ({count})", callback_data="check_sub")
+#     markup.add(subscribe_button)
+#     bot.send_message(message.chat.id, """<b>😍 Apple Airpods почти ваши!</b>
+# Осталось нажать одну кнопочку 👇""",
+#                      reply_markup=markup, parse_mode="HTML")
 
 
 @bot.message_handler(func=lambda message: True, content_types=['text'])
@@ -38,15 +39,16 @@ def check_subscription(message):
 
 @bot.callback_query_handler(func=lambda call: call.data == 'check_sub')
 def check_sub(call: CallbackQuery):
-    user_id = call.from_user.id
-    if cursor.execute(f"SELECT * FROM subscribers WHERE user_id = '{user_id}'").fetchone():
-        bot.send_message(call.from_user.id, "Вы уже участвуете в конкурсе")
-    elif check_if_subscribed(user_id, "@vamdodomaru"):
-        add_to_database(user_id, call.from_user.username)
-        bot.send_message(call.from_user.id, "Вы участвуете в конкурсе 🔥")
-    else:
-        bot.send_message(call.from_user.id, "Пожалуйста, подпишитесь на канал для участия.")
-    bot.answer_callback_query(call.id)
+    bot.send_message(call.from_user.id, "Конкурс завершен!")
+    # user_id = call.from_user.id
+    # if cursor.execute(f"SELECT * FROM subscribers WHERE user_id = '{user_id}'").fetchone():
+    #     bot.send_message(call.from_user.id, "Вы уже участвуете в конкурсе")
+    # elif check_if_subscribed(user_id, "@vamdodomaru"):
+    #     add_to_database(user_id, call.from_user.username)
+    #     bot.send_message(call.from_user.id, "Вы участвуете в конкурсе 🔥")
+    # else:
+    #     bot.send_message(call.from_user.id, "Пожалуйста, подпишитесь на канал для участия.")
+    # bot.answer_callback_query(call.id)
 
 
 def check_if_subscribed(user_id, channel_username):
